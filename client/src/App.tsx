@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { TradeDetailPage } from './pages/TradeDetailPage';
 import { TradesPage } from './pages/TradesPage';
 
 
-function App() {
+export const App: FC = () => {
   return (
     <div>
       <BrowserRouter>
@@ -18,4 +18,4 @@ function App() {
   )
 }
 
-export default App;
+

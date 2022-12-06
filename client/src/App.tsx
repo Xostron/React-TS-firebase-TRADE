@@ -6,7 +6,7 @@ import { TradesPage } from './pages/TradesPage';
 
 export const App: FC = () => {
   return (
-    <div>
+    <main>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<TradesPage />} />
@@ -14,7 +14,7 @@ export const App: FC = () => {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
-    </div>
+    </main>
   )
 }
 

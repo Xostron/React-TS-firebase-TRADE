@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { NavLink } from 'react-router-dom'
 import { HandySvg } from 'handy-svg'
 import styleMenu from './LinkIconMenu.module.less'
@@ -8,15 +8,16 @@ import styleSt from './LinkIconSt.module.less'
 
 
 const colorDisabled = '#0000003d'
+interface ILinkIconProps {
+    name: String,
+    icon: React.ReactElement,
+    to: String,
+    type: String,
+    disabled: Boolean
+}
+// types<ILinkIconProps>
+export const LinkIcon: FC<ILinkIconProps> = ({ icon, name, to, type, disabled }) => {
 
-export const LinkIcon = ({ item }) => {
-    const {
-        name,
-        icon,
-        to,
-        type,
-        disabled
-    } = item
 
     //инициализация стиля
     let style = styleSt
@@ -34,12 +35,12 @@ export const LinkIcon = ({ item }) => {
     }
 
     // подстветка активного состояния для NavLink
-    function activeStyle({ isActive }) {
+    function activeStyle(isActive: Boolean) {
         return (isActive ? (style.myLink + ' ' + style.active) : style.myLink)
     }
 
 
-    const eventDisabled = (e) => {
+    const eventDisabled = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (disabled)
             e.preventDefault()
     }

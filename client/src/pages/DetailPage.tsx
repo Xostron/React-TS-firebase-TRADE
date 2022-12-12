@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 
-export const TradeDetailPage: FC = () => {
+export const DetailPage: FC = () => {
     const id = useParams().id
     return (
         <div>

@@ -8,17 +8,20 @@ import { MainPage } from './pages/MainPage';
 
 export const App: FC = () => {
   return (
-    <main>
+
+
+    <BrowserRouter>
       <Navbar />
-      <BrowserRouter>
+      <main>
         <Routes>
           <Route path='/' element={<MainPage />} />
           <Route path='/main/:id' element={<DetailPage />} />
           <Route path='/about' element={<AboutPage />} />
           <Route path="*" element={<Navigate to="/about" />} />
         </Routes>
-      </BrowserRouter>
-    </main>
+      </main>
+    </BrowserRouter>
+
   )
 }
 

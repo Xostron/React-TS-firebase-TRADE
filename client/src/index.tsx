@@ -17,13 +17,12 @@ export const firebaseContext = createContext<IFirebaseContext>({} as IFirebaseCo
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAoWSBt1joZT8XZk-Ba62XeGkrBdYcwUMQ",
-  authDomain: "kanban-react-417bf.firebaseapp.com",
-  projectId: "kanban-react-417bf",
-  storageBucket: "kanban-react-417bf.appspot.com",
-  messagingSenderId: "833511189578",
-  appId: "1:833511189578:web:d4685a3216dc8baf9c0ab3",
-  measurementId: "G-CJ9LSBKWSM"
+  apiKey: "AIzaSyDwZs2dGg_vObKFhJzIEixeIxy71FSn6i0",
+  authDomain: "xostron-todo-12.firebaseapp.com",
+  projectId: "xostron-todo-12",
+  storageBucket: "xostron-todo-12.appspot.com",
+  messagingSenderId: "567976429918",
+  appId: "1:567976429918:web:18834641ba41d1ceee27cf"
 }
 // // Initialize Firebase
 const app = initializeApp(firebaseConfig);

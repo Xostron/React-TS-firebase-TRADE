@@ -13,3 +13,11 @@ export interface IPlayer {
     name: string;
     mail: string;
 }
+
+export interface ILink {
+    name: String,
+    icon: string,
+    to: string,
+    type: String,
+    disabled: Boolean
+}

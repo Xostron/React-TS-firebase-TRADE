@@ -14,9 +14,9 @@ function RowListSquare({ items, renderItem, }: IListSquare) {
     const arrComponents = items.map(renderItem)
 
     // слушатель width контента 
-    const [size, setSize] = useState<number>(5)
+    const [size, setSize] = useState<number>(4)
     const refWidth = useRef<HTMLDivElement>(null)
-    useResize(resize)
+    useResize(resize, initResize)
     function resize() {
         let width = refWidth.current?.clientWidth || 1000
         if (width <= size * 258) {
@@ -28,7 +28,15 @@ function RowListSquare({ items, renderItem, }: IListSquare) {
                 setSize(size => size + 1)
         }
     }
-
+    function initResize(_size: number) {
+        let width = refWidth.current?.clientWidth || 1000
+        for (let i = 2; i < 8; i++) {
+            if (width < i * 258 && width > (i - 1) * 258) {
+                setSize(i - 1)
+                break
+            }
+        }
+    }
 
     // преобразование 1мерного в 2мерный массив
     function get2Arr(array: React.ReactNode[], limit: number) {

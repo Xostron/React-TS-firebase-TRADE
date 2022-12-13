@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, useEffect } from "react";
 import style from './BtnIcon.module.less'
 import { HandySvg } from 'handy-svg'
 
@@ -13,6 +13,9 @@ interface IBtnIcon {
 
 const RowBtnIcon: FC<IBtnIcon> = ({ tooltip, icon = '', handler,
     width = 24, height = 24, children }) => {
+    useEffect(() => {
+        console.log('Btn rendering')
+    })
     return (
         <div className={style.container} onClick={handler}>
             {children}

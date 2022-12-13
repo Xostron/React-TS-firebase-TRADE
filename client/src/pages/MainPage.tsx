@@ -24,11 +24,7 @@ export const MainPage: FC = () => {
                     tooltip='Добавить карточку'
                 />
             </Title>
-            <BtnIcon
-                icon={iAdd}
-                handler={handlerRender}
-                tooltip='Добавить карточку'
-            />
+
             {/* <CardTrade /> */}
         </>
     )

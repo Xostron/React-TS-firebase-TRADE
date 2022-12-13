@@ -1,23 +1,23 @@
 export interface IRoom {
-    id: string;
-    dateBegin: Date;
-    dateFinish: Date;
-    durationRound: number;
-    title: string;
-    summaryRounds: number;
-    currRound: number;
+    id: string,
+    title: string,
+    dateBegin: string,
+    dateFinish: string,
+    durationRound: string,
+    createAT: string
 }
 
-export interface IPlayer {
-    id: string;
-    name: string;
-    mail: string;
+export interface IRoomComponent {
+    idx: number,
+    room: IRoom,
+    handlerEnterAsWatch: (idx: number) => void,
+    handlerEnterAsPlayer: (idx: number) => void,
 }
 
 export interface ILink {
-    name: String,
+    name: string,
     icon: string,
     to: string,
-    type: String,
-    disabled: Boolean
+    type: string,
+    disabled: boolean
 }

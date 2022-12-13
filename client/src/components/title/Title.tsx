@@ -14,7 +14,7 @@ interface ITitle {
 
 const RowTitle: FC<ITitle> = ({ title, children, icon, handler, text }) => {
 
-    useEffect(() => { console.log('render Title') })
+    console.log('Render Title')
 
     return (
         <div className={style.title}>

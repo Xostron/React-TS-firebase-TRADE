@@ -13,9 +13,9 @@ interface IBtnIcon {
 
 const RowBtnIcon: FC<IBtnIcon> = ({ tooltip, icon = '', handler,
     width = 24, height = 24, children }) => {
-    useEffect(() => {
-        console.log('Btn rendering')
-    })
+
+    console.log('Render BtnIcon')
+
     return (
         <div className={style.container} onClick={handler}>
             {children}

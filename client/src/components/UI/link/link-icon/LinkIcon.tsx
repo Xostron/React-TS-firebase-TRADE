@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
-import { LinkProps, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { HandySvg } from 'handy-svg'
 import styleMenu from './LinkIconMenu.module.less'
 import styleSt from './LinkIconSt.module.less'
-import { NavLinkProps } from 'react-router-dom'
+
 import { ILink } from '../../../../types/types'
 
 

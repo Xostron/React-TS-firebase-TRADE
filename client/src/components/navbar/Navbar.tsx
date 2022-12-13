@@ -8,13 +8,13 @@ import iTasks from '../../source/icons/bx-calendar-star.svg'
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-
+import { ILink } from "../../types/types";
 
 export const Navbar: FC = () => {
 
     // const history = useNavigate()
 
-    const links = [
+    const links: ILink[] = [
         { name: 'Мои задачи', icon: iTasks, to: '/', type: 'st', disabled: false },
         { name: 'О нас', icon: iTasks, to: '/about', type: 'st', disabled: false }
     ]
@@ -37,18 +37,21 @@ export const Navbar: FC = () => {
 
     return (
         <div className={style.container}>
-            Navbar
             <div className={style.left}>
                 <h2>Xostron</h2>
-                {links.map((link, idx) => <LinkIcon key={idx} item={link} />)}
+                {links.map((link, idx) => <LinkIcon
+                    key={idx}
+                    item={link}
+                />
+                )}
             </div>
 
-            {/* <div className={style.right}>
+            <div className={style.right}>
                 {user ?
                     <>
                         <div className={style.child}>
                             <div className={style.tooltipUser}>{user.email}</div>
-                            <img className={style.photoUser} src={user.photoURL} alt="photo User"></img>
+                            <img className={style.photoUser} src={user.photoURL || undefined} alt="photo User"></img>
                         </div>
                         <BtnText onClick={logoutHandler}>
                             Выйти
@@ -64,7 +67,7 @@ export const Navbar: FC = () => {
                         <div className={style.offline}></div>
                     </>
                 }
-            </div> */}
+            </div>
         </div>
     )
 }

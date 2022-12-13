@@ -1,27 +1,25 @@
 import React, { FC } from 'react'
-import { NavLink } from 'react-router-dom'
+import { LinkProps, NavLink } from 'react-router-dom'
 import { HandySvg } from 'handy-svg'
 import styleMenu from './LinkIconMenu.module.less'
 import styleSt from './LinkIconSt.module.less'
-
+import { NavLinkProps } from 'react-router-dom'
+import { ILink } from '../../../../types/types'
 
 
 
 const colorDisabled = '#0000003d'
+
 interface ILinkIconProps {
-    name: String,
-    icon: React.ReactElement,
-    to: String,
-    type: String,
-    disabled: Boolean
+    item: ILink
 }
 // types<ILinkIconProps>
-export const LinkIcon: FC<ILinkIconProps> = ({ icon, name, to, type, disabled }) => {
+export const LinkIcon: FC<ILinkIconProps> = ({ item }) => {
 
 
     //инициализация стиля
     let style = styleSt
-    switch (type) {
+    switch (item.type) {
         case 'menu' || 'navbar':
             style = styleMenu
             break
@@ -35,34 +33,34 @@ export const LinkIcon: FC<ILinkIconProps> = ({ icon, name, to, type, disabled })
     }
 
     // подстветка активного состояния для NavLink
-    function activeStyle(isActive: Boolean) {
+    const activeStyle = ({ isActive }: { isActive: boolean }): string => {
         return (isActive ? (style.myLink + ' ' + style.active) : style.myLink)
     }
 
 
-    const eventDisabled = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (disabled)
+    const eventDisabled = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (item.disabled)
             e.preventDefault()
     }
 
-
+    const iconDisabled = (item.disabled ? { fill: colorDisabled } : {}) as string || undefined
 
     return (
         <NavLink
-            key={to}
+            key={item.to}
             className={activeStyle}
-            to={to}
+            to={item.to}
             onClick={eventDisabled}
-            style={disabled ? { color: colorDisabled } : {}}
+            style={item.disabled ? { color: colorDisabled } : {}}
         >
             <HandySvg
-                src={icon}
+                src={item.icon}
                 className={style.navIcon}
                 width='24px'
                 height='24px'
-                style={disabled ? { fill: colorDisabled } : {}}
+                style={iconDisabled}
             />
-            <span className={style.navText}>{name}</span>
+            <span className={style.navText}>{item.name}</span>
         </NavLink>
     )
 }

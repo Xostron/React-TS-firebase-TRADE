@@ -46,28 +46,28 @@ export const Navbar: FC = () => {
                 )}
             </div>
 
-            <div className={style.right}>
-                {user ?
-                    <>
-                        <div className={style.child}>
-                            <div className={style.tooltipUser}>{user.email}</div>
-                            <img className={style.photoUser} src={user.photoURL || undefined} alt="photo User"></img>
-                        </div>
-                        <BtnText onClick={logoutHandler}>
-                            Выйти
-                        </BtnText>
-                        <div className={style.online}></div>
 
-                    </>
-                    :
-                    <>
-                        <BtnText onClick={loginHandler}>
-                            Войти
-                        </BtnText>
-                        <div className={style.offline}></div>
-                    </>
-                }
-            </div>
+            {user ?
+                <div className={style.right}>
+                    <div className={style.child}>
+                        <div className={style.tooltipUser}>{user.email}</div>
+                        <img className={style.photoUser} src={user.photoURL || undefined} alt="photo User"></img>
+                    </div>
+                    <BtnText onClick={logoutHandler}>
+                        Выйти
+                    </BtnText>
+                    <div className={style.online}></div>
+
+                </div>
+                :
+                <div className={style.right}>
+                    <BtnText onClick={loginHandler}>
+                        Войти
+                    </BtnText>
+                    <div className={style.offline}></div>
+                </div>
+            }
+
         </div>
     )
 }

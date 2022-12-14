@@ -15,3 +15,29 @@ export const getPlayers = async (db: Firestore, collectionName: string, idRoom: 
         return data
     } catch (error) { }
 }
+
+
+export const updPlayer = async (idx: number, db: Firestore, collectionName: string, uid: string, idRoom: string, convertPlayers: IPlayer[]) => {
+    // получить id players-room
+    let q = query(collection(db, collectionName), where("uid", "==", uid), where('idRoom', '==', idRoom))
+    const querySnapshot = await getDocs(q)
+
+    let idConnect = ''
+    querySnapshot.forEach((doc) => {
+        idConnect = doc.id
+    })
+
+    // обновить
+    const DocRef = doc(db, collectionName, idConnect);
+    await updateDoc(DocRef,
+        {
+            row1: convertPlayers[idx].row1,
+            row2: Number(convertPlayers[idx].row2),
+            row3: Number(convertPlayers[idx].row3),
+            row4: Number(convertPlayers[idx].row4),
+            row5_1: Number(convertPlayers[idx].row5_1),
+            row5_2: Number(convertPlayers[idx].row5_2),
+            row5_3: Number(convertPlayers[idx].row5_3),
+            // online: convertPlayers[idx].online,
+        });
+}

@@ -9,7 +9,7 @@ interface ITitle {
     icon?: string,
     handler?: () => void,
     title?: String,
-    text?: String
+    text?: String,
 }
 
 const RowTitle: FC<ITitle> = ({ title, children, icon, handler, text }) => {

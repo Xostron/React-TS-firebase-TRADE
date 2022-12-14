@@ -10,7 +10,10 @@ import iAdd from '../source/icons/bx-customize.svg'
 import { CardRoom } from "../components/card-room/CardRoom"
 import { ListSquare } from "../components/UI/list/list-square/ListSquare";
 import { IRoom, IRoomComponent } from "../types/types";
-import { ListColumn } from "../components/UI/list/list-column/ListColumn";
+import { MyModal } from "../components/UI/modal/MyModal";
+import { DetailPage, IDetailPage } from "./DetailPage";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getRooms } from "../api/api-firebase-room";
 
 const mockRoom: Array<IRoom> = [
     {
@@ -71,39 +74,72 @@ const mockRoom: Array<IRoom> = [
     },
 ]
 
+const defaultPropsDetailPage = {
+    room: {
+        id: '',
+        title: '1',
+        dateBegin: '',
+        dateFinish: '',
+        durationRound: '',
+        createAT: ''
+    },
+    uid: '',
+    isOpen: false
+}
 
 export const MainPage: FC = () => {
-
-    // ******************************Athorization******************************
-    const { auth } = useContext(firebaseContext)
-
-    // ******************************Database******************************
-    const [rooms, setRooms] = useState<IRoom[]>(mockRoom)
-
-    // ******************************List square props******************************
+    // ********************************Firebase********************************
+    const { auth, db } = useContext(firebaseContext)
+    const [user] = useAuthState(auth)
+    // ********************************Database********************************
+    const [rooms, setRooms] = useState<IRoom[]>([])
+    useEffect(() => { getRooms(db, 'rooms', setRooms) }, [])
+    // *********************************State**********************************
+    const [modalForm, setModalForm] = useState<boolean>(false)
+    const [modalRoom, setModalRoom] = useState<boolean>(false)
     const [roomComponents, setRoomComponents] = useState<IRoomComponent[]>([])
-    const handlerEnterAsWatch = (idx: number) => { }
-    const handlerEnterAsPlayer = (idx: number) => { }
-    // callback превращение данных в roomComponents для ListSquare
-    const cbPropsRoom = useCallback((room: IRoom, idx: number) => ({
+    const [propsDetailPage, setPropsDetailPage] = useState<IDetailPage>(defaultPropsDetailPage)
+
+    // ***************************List square props****************************
+    // callback формирования данных в roomComponents для ListSquare
+    const cbPropsRoom = (room: IRoom, idx: number) => ({
         idx,
         room,
         handlerEnterAsWatch,
         handlerEnterAsPlayer
-    }), [])
-    // формирование пропса roomComponents после рендеринга, перед фактическим появлением в DOM
+    })
+    // формирование пропса roomComponents для списка ListSquare после рендеринга
     useEffect(() => {
         rooms && setRoomComponents(rooms.map(cbPropsRoom))
     }, [rooms])
+    // handler props
+    const handlerEnterAsWatch = (idx: number) => {
 
-    console.log('Render page')
+        setPropsDetailPage(cbPropsDetailRoom(idx))
+        setModalRoom(true)
+    }
+    const handlerEnterAsPlayer = (idx: number) => {
+
+        setPropsDetailPage(cbPropsDetailRoom(idx))
+        setModalRoom(true)
+    }
+
+
+    // ***************************DetailPage props****************************
+    // callback формирование props для просмотра комнаты в DetailTradePage 
+    const cbPropsDetailRoom = (idx: number) => ({
+        room: rooms[idx],
+        uid: user ? user.uid : null,
+        isOpen: true,
+    })
+    // ***************************FormCreate props****************************
+    console.log('Render page', rooms)
     return (
-
         <>
             <Title title={'Текущие торги'} >
                 <BtnIcon
                     icon={iAdd}
-                    handler={() => { }}
+                    handler={() => { setModalForm(modalForm => !modalForm) }}
                     tooltip='Добавить карточку'
                 />
             </Title>
@@ -118,9 +154,13 @@ export const MainPage: FC = () => {
             />
 
 
+            <MyModal visible={modalForm} setVisible={setModalForm}>
 
+            </MyModal>
 
-
+            <MyModal visible={modalRoom} setVisible={setModalRoom}>
+                <DetailPage props={propsDetailPage} />
+            </MyModal>
 
         </>
     )

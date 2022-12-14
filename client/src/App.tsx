@@ -24,7 +24,6 @@ export const App: FC = () => {
           <main>
             <Routes>
               <Route path='/' element={<MainPage />} />
-              <Route path='/main/:id' element={<DetailPage />} />
               <Route path='/about' element={<AboutPage />} />
               <Route path="*" element={<Navigate to="/about" />} />
             </Routes>

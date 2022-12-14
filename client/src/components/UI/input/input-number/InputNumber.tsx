@@ -4,13 +4,13 @@ import { HandySvg } from "handy-svg";
 
 interface IInputNumber {
     name: string,
-    placeholder: string,
+    placeholder?: string,
     value: number,
     changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
 interface IInputNumberProps {
-    props: IInputNumber
+    props: IInputNumber;
 }
 
 export const InputNumber: FC<IInputNumberProps> = ({ props }) => {

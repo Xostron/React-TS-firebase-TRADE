@@ -1,10 +1,14 @@
 import React, { FC, useContext, useState, useEffect, useLayoutEffect, useCallback, useMemo } from "react";
 import { firebaseContext } from "..";
 import { Loader } from "../components/UI/loader/Loader";
-import { IRoom } from "../types/types";
+import { IPlayer, IPlayersTable, IRoom } from "../types/types";
 import style from './DetailTradePage.module.less'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { collection, where, query } from "firebase/firestore";
+import { PlayersTable } from "../components/player-table/PlayersTable";
+
 export interface IDetailPage {
-    room: IRoom;
+    room?: IRoom;
     uid: string | null;
     isOpen: boolean;
 }
@@ -19,14 +23,42 @@ export const DetailPage: FC<IDetailPageProps> = ({ props }) => {
         uid,
         isOpen,
     } = props
-    // ********************************Firebase********************************
-    const { db } = useContext(firebaseContext)
 
-    // ********************************Database********************************
     // *********************************State**********************************
+    const [players, setPlayers] = useState<IPlayer[]>([])
+
     // *******************************Rendering********************************
     let begin = room && new Date(room.dateBegin).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
     let finish = room && new Date(room.dateFinish).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
+    let idRoom = room ? room.id : '0'
+
+    let propsPlayerTable: IPlayersTable = {
+        players: players,
+        uid: uid,
+        idRoom: idRoom,
+        isOpen: isOpen
+    }
+    // ********************************Firebase********************************
+    const { db } = useContext(firebaseContext)
+    // автоматически обновляет данные players 
+    const [_players, loading] = useCollectionData(
+        query(collection(db, 'players'),
+            where('idRoom', '==', idRoom))
+    )
+    // приведение к типу IPlayer[] так как данные от firebase имею свой тип DocumentData
+    useLayoutEffect(() => {
+        let data: IPlayer[] = []
+        _players?.map((val, idx) => {
+            const { idRoom, uid, userName, row1, row2, row3, row4, row5_1, row5_2, row5_3, online, createAT } = val
+            data.push({ idRoom, uid, userName, row1, row2, row3, row4, row5_1, row5_2, row5_3, online, createAT })
+        })
+        setPlayers(data)
+    }, [_players])
+
+    // ********************************Database********************************
+    console.log('DetailPage Plyers = ', _players, players)
+    // *******************************Rendering********************************
+
 
     return (
         <div>
@@ -50,7 +82,7 @@ export const DetailPage: FC<IDetailPageProps> = ({ props }) => {
                     </div>
 
                     <div className={style.players}>
-                        {/* <PlayersTable props={propsPlayerTable} /> */}
+                        <PlayersTable props={propsPlayerTable} />
                     </div>
 
                 </div>

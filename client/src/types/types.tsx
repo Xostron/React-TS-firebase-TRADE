@@ -36,3 +36,10 @@ export interface IPlayer {
     online: boolean,
     createAT: string
 }
+
+export interface IPlayersTable {
+    players: IPlayer[],
+    uid: string | null,
+    idRoom: string,
+    isOpen: boolean
+}

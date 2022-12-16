@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom'
 import { HandySvg } from 'handy-svg'
 import styleMenu from './LinkIconMenu.module.less'
 import styleSt from './LinkIconSt.module.less'
-
 import { ILink } from '../../../../types/types'
 
 

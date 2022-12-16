@@ -1,8 +1,15 @@
-import React from "react";
+import React, { FC } from "react";
 import style from './InputText.module.less'
 import { HandySvg } from 'handy-svg'
+import { IInputText } from "../../../../types/types";
 
-export const InputText = ({ props }) => {
+
+
+interface IPropsInputText {
+    props: IInputText
+}
+
+export const InputText: FC<IPropsInputText> = ({ props }) => {
     const {
         name,
         placeholder,

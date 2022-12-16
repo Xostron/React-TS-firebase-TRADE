@@ -43,3 +43,41 @@ export interface IPlayersTable {
     idRoom: string,
     isOpen: boolean
 }
+
+
+export interface IInputText {
+    name: string,
+    placeholder?: string,
+    autoFocus?: boolean,
+    changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    value: string
+}
+export interface IInputDate {
+    name: string,
+    value: string,
+    changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    icon?: string,
+    placeholder?: string,
+    blurHandler?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    checked?: boolean,
+    propsSchedular?: { state: string }
+}
+export interface IAreatext {
+    name: string,
+    placeholder: string,
+    changeHandler: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
+    value: string,
+    autofocus: boolean,
+}
+export interface IInputNumber {
+    name: string,
+    placeholder?: string,
+    value: number,
+    changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
+}
+export interface IInputHMS {
+    name: string,
+    placeholder?: string,
+    value: string,
+    changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
+}

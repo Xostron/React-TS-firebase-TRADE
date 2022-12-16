@@ -1,23 +1,40 @@
-import React from "react"
+import React, { FC } from "react"
 import { useEffect } from "react"
 import { useState } from "react"
 import { BtnText } from "../UI/button/btn-text/BtnText"
 import { MyTextarea } from "../UI/input/areatext/MyTextarea"
 import { InputDate } from '../UI/input/input-date/InputDate'
-import { InputText } from "../UI/input/input-text/InputText"
 import { InputTimeHMS } from "../UI/input/input-time/InputTimeHMS"
 import style from './CardFormCreate.module.less'
+import { IAreatext, IInputDate, IInputHMS, IRoom } from "../../types/types"
 
-export const CardFormCreate = ({ props }) => {
+
+
+
+interface ICardFormCreate {
+    itemRoom: IRoom,
+    saveRoomHandler: () => void,
+    setModalCreate: (state: boolean) => void,
+    propsAreaTitle: IAreatext,
+    propsDateBegin: IInputDate,
+    propsDateFinish: IInputDate,
+    propsDuration: IInputHMS
+}
+
+interface IPropsCardFormCreate {
+    props: ICardFormCreate;
+}
+
+export const CardFormCreate: FC<IPropsCardFormCreate> = ({ props }) => {
     const [disable, setDisable] = useState(true)
     const {
         itemRoom,
         saveRoomHandler,
         setModalCreate,
-        IPropsTitle,
-        IPropsDateBegin,
-        IPropsDateFinish,
-        IPropsDuration
+        propsAreaTitle,
+        propsDateBegin,
+        propsDateFinish,
+        propsDuration
     } = props
 
     const disableBtn = () => {
@@ -36,11 +53,10 @@ export const CardFormCreate = ({ props }) => {
 
     return (
         <div className={style.container}>
-            <MyTextarea props={IPropsTitle} />
-            <InputDate props={IPropsDateBegin} />
-            <InputDate props={IPropsDateFinish} />
-            {/* <InputText props={IPropsDuration} /> */}
-            <InputTimeHMS props={IPropsDuration} />
+            <MyTextarea props={propsAreaTitle} />
+            <InputDate props={propsDateBegin} />
+            <InputDate props={propsDateFinish} />
+            <InputTimeHMS props={propsDuration} />
             <BtnText
                 onClick={() => {
                     saveRoomHandler()

@@ -88,16 +88,18 @@ const defaultPropsDetailPage = {
 }
 
 export const MainPage: FC = () => {
+
     // ********************************Firebase********************************
     const { auth, db } = useContext(firebaseContext)
     const [user] = useAuthState(auth)
+
     // ********************************Database********************************
     const [rooms, setRooms] = useState<IRoom[]>([])
     useEffect(() => { getRooms(db, 'rooms', setRooms) }, [])
+
     // *********************************State**********************************
     const [modalForm, setModalForm] = useState<boolean>(false)
     const [modalRoom, setModalRoom] = useState<boolean>(false)
-    const [roomComponents, setRoomComponents] = useState<IRoomComponent[]>([])
     const [propsDetailPage, setPropsDetailPage] = useState<IDetailPage>(defaultPropsDetailPage)
 
     // ***************************List square props****************************
@@ -108,29 +110,27 @@ export const MainPage: FC = () => {
         handlerEnterAsWatch,
         handlerEnterAsPlayer
     })
-    // формирование пропса roomComponents для списка ListSquare после рендеринга
-    useEffect(() => {
-        rooms && setRoomComponents(rooms.map(cbPropsRoom))
-    }, [rooms])
+
+    // const propsRoom = useMemo(() => cbPropsRoom, [rooms])
+
     // handler props
     const handlerEnterAsWatch = (idx: number) => {
 
-        setPropsDetailPage(cbPropsDetailRoom(idx))
+        setPropsDetailPage(cbPropsDetailRoom(idx, true))
         setModalRoom(true)
     }
     const handlerEnterAsPlayer = (idx: number) => {
 
-        setPropsDetailPage(cbPropsDetailRoom(idx))
+        setPropsDetailPage(cbPropsDetailRoom(idx, true))
         setModalRoom(true)
     }
 
-
     // ***************************DetailPage props****************************
     // callback формирование props для просмотра комнаты в DetailTradePage 
-    const cbPropsDetailRoom = (idx: number) => ({
+    const cbPropsDetailRoom = (idx: number, open: boolean) => ({
         room: rooms[idx],
         uid: user ? user.uid : null,
-        isOpen: true,
+        isOpen: open,
     })
     // ***************************FormCreate props****************************
     console.log('Render page', rooms)
@@ -144,22 +144,25 @@ export const MainPage: FC = () => {
                 />
             </Title>
 
-            <ListSquare
-                items={roomComponents}
-                renderItem={(room, idx) => {
-                    return (
-                        <CardRoom key={idx} props={room} />
-                    )
-                }}
-            />
+            {rooms &&
+                <ListSquare
+                    // rooms && rooms.map(cbPropsRoom)
+                    items={rooms.map(cbPropsRoom)}
+                    renderItem={(room, idx) => {
+                        return (
+                            <CardRoom key={idx} props={room} />
+                        )
+                    }}
+                />
+            }
 
-
-            <MyModal visible={modalForm} setVisible={setModalForm}>
+            <MyModal visible={modalForm} setVisible={setModalForm} index={1}>
 
             </MyModal>
 
-            <MyModal visible={modalRoom} setVisible={setModalRoom}>
-                <DetailPage props={propsDetailPage} />
+            <MyModal visible={modalRoom} setVisible={setModalRoom} index={2}>
+                {propsDetailPage.isOpen &&
+                    <DetailPage props={propsDetailPage} />}
             </MyModal>
 
         </>

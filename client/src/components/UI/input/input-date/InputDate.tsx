@@ -1,9 +1,15 @@
-import React from "react";
+import React, { FC } from "react";
 import style from './InputDate.module.less'
 import { HandySvg } from "handy-svg";
+import { IInputDate } from "../../../../types/types";
 
 
-export const InputDate = ({ props }) => {
+
+interface IPropsInputDate {
+    props: IInputDate
+}
+
+export const InputDate: FC<IPropsInputDate> = ({ props }) => {
     const {
         icon,
         name,
@@ -60,7 +66,7 @@ export const InputDate = ({ props }) => {
                 type="datetime-local"
                 onChange={(e) => changeHandler(e)}
                 onBlur={(e) => {
-                    blurHandler()
+                    blurHandler?.(e)
                 }}
             />
 

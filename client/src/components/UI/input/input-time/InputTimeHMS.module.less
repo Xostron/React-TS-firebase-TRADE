@@ -9,25 +9,20 @@
         width: 160px;
     }
 
-    .numb {
+    .time {
         padding: 0.25rem;
         outline: none;
-        border: none;
+        border: 1px solid @hide-text-color;
+        border-radius: .5rem;
         color: @regular-text-color;
         background-color: transparent;
         .regular-family;
         font-size: .85rem;
         color-scheme: dark;
-        text-align: center;
 
         &::placeholder {
             font-size: .85rem;
             color: @hide-text-color;
-        }
-
-        &::-webkit-outer-spin-button,
-        &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
         }
     }
 }

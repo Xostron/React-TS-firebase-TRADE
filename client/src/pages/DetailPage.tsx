@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState, useEffect, useLayoutEffect, useCallback, useMemo } from "react";
+import React, { FC, useContext, useState, useEffect, useLayoutEffect, useCallback, useMemo, memo } from "react";
 import { firebaseContext } from "..";
 import { Loader } from "../components/UI/loader/Loader";
 import { IPlayer, IPlayersTable, IRoom } from "../types/types";
@@ -17,35 +17,23 @@ interface IDetailPageProps {
     props: IDetailPage;
 }
 
-export const DetailPage: FC<IDetailPageProps> = ({ props }) => {
+const RowDetailPage: FC<IDetailPageProps> = ({ props }) => {
     const {
         room,
         uid,
         isOpen,
     } = props
 
-    // *********************************State**********************************
-    const [players, setPlayers] = useState<IPlayer[]>([])
-
-    // *******************************Rendering********************************
-    let begin = room && new Date(room.dateBegin).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
-    let finish = room && new Date(room.dateFinish).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
-    let idRoom = room ? room.id : '0'
-
-    let propsPlayerTable: IPlayersTable = {
-        players: players,
-        uid: uid,
-        idRoom: idRoom,
-        isOpen: isOpen
-    }
     // ********************************Firebase********************************
     const { db } = useContext(firebaseContext)
-    // автоматически обновляет данные players 
+    let idRoom = room ? room.id : '0'
+    // автоматически обновляет данные players - call rendering 1 empty, call rendering 3 - data
     const [_players, loading] = useCollectionData(
         query(collection(db, 'players'),
             where('idRoom', '==', idRoom))
     )
     // приведение к типу IPlayer[] так как данные от firebase имею свой тип DocumentData
+    // call rendering 4
     useLayoutEffect(() => {
         let data: IPlayer[] = []
         _players?.map((val, idx) => {
@@ -53,10 +41,25 @@ export const DetailPage: FC<IDetailPageProps> = ({ props }) => {
             data.push({ idRoom, uid, userName, row1, row2, row3, row4, row5_1, row5_2, row5_3, online, createAT })
         })
         setPlayers(data)
+        // console.log('DetailPage Effect =', _players)
     }, [_players])
 
+    // *********************************State**********************************
+    const [players, setPlayers] = useState<IPlayer[]>([]) //call rendering 2
+
+    // *******************************Rendering********************************
+    let begin = room && new Date(room.dateBegin).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
+    let finish = room && new Date(room.dateFinish).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
+
+    let propsPlayerTable: IPlayersTable = {
+        players: players,
+        uid: uid,
+        idRoom: idRoom,
+        isOpen: isOpen
+    }
+
     // ********************************Database********************************
-    console.log('DetailPage Plyers = ', _players, players)
+    console.log('Render DetailPage =', _players, players)
     // *******************************Rendering********************************
 
 
@@ -82,7 +85,8 @@ export const DetailPage: FC<IDetailPageProps> = ({ props }) => {
                     </div>
 
                     <div className={style.players}>
-                        <PlayersTable props={propsPlayerTable} />
+                        {players.length &&
+                            <PlayersTable props={propsPlayerTable} />}
                     </div>
 
                 </div>
@@ -95,3 +99,6 @@ export const DetailPage: FC<IDetailPageProps> = ({ props }) => {
         </div>
     )
 }
+export const DetailPage = memo(RowDetailPage,
+    (prevProps, nextProps) => prevProps.props.room?.id === nextProps.props.room?.id
+)

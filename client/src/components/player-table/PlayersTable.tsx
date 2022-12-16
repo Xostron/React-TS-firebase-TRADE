@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { useEffect, useState, useContext } from "react";
+import React, { FC, memo } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 import { BtnText } from "../UI/button/btn-text/BtnText";
 import { InputNumber } from "../UI/input/input-number/InputNumber";
 import { InputText } from "../UI/input/input-text/InputText";
@@ -28,7 +28,8 @@ const emptyPlayers: IPlayer = {
     online: false,
     createAT: ''
 }
-export const PlayersTable: FC<IPlayersTableProps> = ({ props }) => {
+
+const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
 
     const {
         players,
@@ -36,12 +37,14 @@ export const PlayersTable: FC<IPlayersTableProps> = ({ props }) => {
         idRoom,
         isOpen
     } = props
+
     // ******************************Firebase******************************
     const { db } = useContext(firebaseContext)
 
     // *******************************State********************************
     // участники комнаты + пустые места
     const [convertPlayers, setConvertPlayers] = useState<IPlayer[]>([])
+
 
     // *******************************EFFECT*******************************
     // участники комнаты + пустые места
@@ -56,6 +59,7 @@ export const PlayersTable: FC<IPlayersTableProps> = ({ props }) => {
             }
         }
         setConvertPlayers(arrPlayers)
+        console.log('Players Table EFFECT = ', convertPlayers)
     }, [players])
 
     // *****************************Rendering******************************
@@ -116,7 +120,8 @@ export const PlayersTable: FC<IPlayersTableProps> = ({ props }) => {
         changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => changeHandlerRow(e, idx)
     })
 
-    // console.log('TABLE =', convertPlayers, players, isOpen)
+    console.log('Render Table =', players)
+
     return (
         <div>
             <table>
@@ -242,3 +247,23 @@ export const PlayersTable: FC<IPlayersTableProps> = ({ props }) => {
         </div>
     )
 }
+
+export const PlayersTable = memo(RowPlayersTable,
+    (prevProps, nextProps) => {
+        // если длина не изменилась, делаем глубокую проверку
+        if (prevProps.props.players.length === nextProps.props.players.length) {
+            for (let i = 0; i < nextProps.props.players.length; i++) {
+                // есть изменения - рендерим заново
+                if (prevProps.props.players[i].idRoom !== nextProps.props.players[i].idRoom)
+                    return false
+            }
+            // без изменений - перерендер не требуется
+            return true
+        }
+        // иначе рендерим заново
+        else { return false }
+    }
+    // prevProps.props.players === nextProps.props.players
+)
+
+

@@ -1,13 +1,14 @@
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
 import style from './MyModal.module.less'
 
 interface IMyModal {
     children: React.ReactNode;
     visible: boolean;
-    setVisible: (visible: boolean) => void
+    setVisible: (visible: boolean) => void;
+    index?: number;
 }
 
-export const MyModal: FC<IMyModal> = ({ children, visible, setVisible }) => {
+const RowMyModal: FC<IMyModal> = ({ children, visible, setVisible, index }) => {
 
     const rootClasses = [style.modal]
     if (visible) {
@@ -17,7 +18,7 @@ export const MyModal: FC<IMyModal> = ({ children, visible, setVisible }) => {
     if (visible) {
         rootClasses2.push(style.active)
     }
-
+    console.log('Render modal = ', index, visible)
     return (
         <div className={rootClasses.join(" ")} onClick={() => setVisible(false)}>
             <div className={rootClasses2.join(" ")} onClick={(e) => e.stopPropagation()}>
@@ -26,3 +27,7 @@ export const MyModal: FC<IMyModal> = ({ children, visible, setVisible }) => {
         </div>
     )
 }
+
+export const MyModal = memo(RowMyModal,
+    (prevProps, nextProps) => prevProps.visible === nextProps.visible
+)

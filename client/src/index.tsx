@@ -1,19 +1,15 @@
-import React, { createContext } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.less';
 import { App } from './App';
 import { initializeApp } from "firebase/app";
-import { Auth, getAuth } from "firebase/auth"
-import { Firestore, getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth"
+import { getFirestore } from "firebase/firestore";
 import 'firebase/firestore'
-import { FirebaseStorage, getStorage } from 'firebase/storage'
+import { getStorage } from 'firebase/storage'
+import { firebaseContext } from './context/MyContext';
 
-export interface IFirebaseContext {
-  auth: Auth,
-  db: Firestore,
-  storage: FirebaseStorage
-}
-export const firebaseContext = createContext<IFirebaseContext>({} as IFirebaseContext)
+
 
 
 const firebaseConfig = {

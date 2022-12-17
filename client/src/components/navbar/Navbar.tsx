@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, FC } from "react";
 import { LinkIcon } from "../UI/link/link-icon/LinkIcon";
 import { BtnText } from "../UI/button/btn-text/BtnText";
-import { firebaseContext } from "../..";
+
 import style from './Navbar.module.less'
 import iTasks from '../../source/icons/bx-calendar-star.svg'
 
@@ -9,6 +9,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ILink } from "../../types/types";
+import { firebaseContext } from "../../context/MyContext";
 
 export const Navbar: FC = () => {
 

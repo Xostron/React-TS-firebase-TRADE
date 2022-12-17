@@ -14,6 +14,7 @@ export interface IRoomComponent {
     handlerEnterAsPlayer: (idx: number) => void,
 }
 
+
 export interface ILink {
     name: string,
     icon: string,
@@ -34,24 +35,28 @@ export interface IPlayer {
     row5_2: number,
     row5_3: number,
     online: boolean,
-    createAT: string
+    createAT: string,
+    mySync?: boolean
+
 }
 
 export interface IPlayersTable {
     players: IPlayer[],
+    you: IPlayer,
+    changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
     uid: string | null,
     idRoom: string,
-    isOpen: boolean
+    isGuest: boolean
 }
-
 
 export interface IInputText {
     name: string,
     placeholder?: string,
     autoFocus?: boolean,
     changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    value: string
+    value?: string
 }
+
 export interface IInputDate {
     name: string,
     value: string,
@@ -62,6 +67,7 @@ export interface IInputDate {
     checked?: boolean,
     propsSchedular?: { state: string }
 }
+
 export interface IAreatext {
     name: string,
     placeholder: string,
@@ -72,7 +78,7 @@ export interface IAreatext {
 export interface IInputNumber {
     name: string,
     placeholder?: string,
-    value: number,
+    value?: number,
     changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 export interface IInputHMS {
@@ -80,4 +86,20 @@ export interface IInputHMS {
     placeholder?: string,
     value: string,
     changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
+}
+
+export interface IDetailPage {
+    room?: IRoom;
+    uid: string | null;
+    isGuest: boolean;
+}
+
+export interface ICardFormCreate {
+    itemRoom: IRoom,
+    saveRoomHandler: () => void,
+    setModalCreate: (state: boolean) => void,
+    propsAreaTitle: IAreatext,
+    propsDateBegin: IInputDate,
+    propsDateFinish: IInputDate,
+    propsDuration: IInputHMS
 }

@@ -2,8 +2,6 @@ import React, {
     FC, useContext, useState, useEffect,
     useReducer, useCallback, useMemo, useLayoutEffect, createContext
 } from "react";
-
-
 import { Title } from "../components/title/Title";
 import { BtnIcon } from "../components/UI/button/btn-icon/BtnIcon";
 import iAdd from '../source/icons/bx-customize.svg'
@@ -17,10 +15,7 @@ import { getRooms, saveRoom } from "../api/api-firebase-room";
 import { firebaseContext, RoomContext } from "../context/MyContext";
 import { getPlayers, isMyRoom, savePlayer } from "../api/api-firebase-players";
 import { CardFormCreate } from "../components/card-form-create/CardFormCreate";
-import { User } from "firebase/auth";
 import { useSchedular } from "../hooks/useSchedular";
-
-
 
 
 const emptyPlayers: IPlayer = {
@@ -48,11 +43,12 @@ const defaultRoom: IRoom = {
 }
 export const MainPage: FC = () => {
 
-    // ********************************Hooks********************************
+    // *********************************Hooks**********************************
     const { auth, db } = useContext(firebaseContext)
     const [user] = useAuthState(auth)
     const { currentTime } = useSchedular(() => callbackSchedular(), 1000)
-    // ********************************Database********************************
+
+    // **************************Data from firestore***************************
     const [rooms, setRooms] = useState<IRoom[]>([])
     useEffect(() => { getRooms(db, 'rooms', setRooms) }, [])
 
@@ -64,14 +60,8 @@ export const MainPage: FC = () => {
     const [propsDetailPage, setPropsDetailPage] = useState<IDetailPage>({} as IDetailPage)
     const [itemRoom, setItemRoom] = useState<IRoom>(defaultRoom)
     const [remainingTime, setRemainingTime] = useState<ITimerDetailPage>({} as ITimerDetailPage)
-    // ***************************List square props****************************
-    // callback формирования данных в roomComponents для ListSquare
-    const cbPropsRooms = (room: IRoom, idx: number) => ({
-        idx,
-        room,
-        handlerEnterAsWatch,
-        handlerEnterAsPlayer
-    })
+
+    // *******************************Schedular********************************
     function callbackSchedular() {
         // console.log('TradesPage schedular', remainingTime)
         // setRemainingTime(new Date(currentTime).toISOString())
@@ -128,7 +118,8 @@ export const MainPage: FC = () => {
         }
         else { }
     }
-    // handler props
+
+    // ********************************Handlers********************************
     const handlerEnterAsWatch = (idx: number) => {
         setPropsDetailPage(cbPropsDetailRoom(idx, true))
         setModalRoom(true)
@@ -160,32 +151,16 @@ export const MainPage: FC = () => {
     const changeHandlerArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setItemRoom({ ...itemRoom, [e.target.name]: e.target.value })
     }
-    const saveRoomHandler = async () => {
+    const saveRoomHandler = () => {
         saveRoom(db, 'rooms', itemRoom)
         getRooms(db, 'rooms', setRooms)
         setModalForm(false)
     }
-    const handlerCallModalForm = useCallback(() => {
+    const handlerCallModalForm = () => {
         user ? setModalForm(modalForm => !modalForm) : alert('Авторизуйтесь через аккаунт google:)')
-    }, [user])
+    }
 
-    // ***************************DetailPage props****************************
-    // callback формирование props для просмотра комнаты в DetailTradePage 
-    const cbPropsDetailRoom = (idx: number, guest: boolean) => ({
-        room: rooms[idx],
-        uid: user ? user.uid : null,
-        isGuest: guest,
-    })
-    // очистка данных при выходе из комнаты
-    useEffect(() => {
-        if (!modalRoom) {
-            setUpdYou(false)
-            setYou(emptyPlayers)
-            setPropsDetailPage({} as IDetailPage)
-        }
-    }, [modalRoom])
-
-    // props для формы создания комнаты
+    // ***************************Form Create props****************************
     let propsFormCreate: ICardFormCreate = {
 
         itemRoom,
@@ -217,8 +192,33 @@ export const MainPage: FC = () => {
         }
     }
 
+    // ***************************List square props****************************
+    const cbPropsRooms = (room: IRoom, idx: number) => ({
+        idx,
+        room,
+        handlerEnterAsWatch,
+        handlerEnterAsPlayer
+    })
+
+    // ***************************Detail Page props****************************
+    const cbPropsDetailRoom = (idx: number, guest: boolean) => ({
+        room: rooms[idx],
+        uid: user ? user.uid : null,
+        isGuest: guest,
+    })
+
+    // *******************Effect after exit from DetailPage********************
+    useEffect(() => {
+        if (!modalRoom) {
+            setUpdYou(false)
+            setYou(emptyPlayers)
+            setPropsDetailPage({} as IDetailPage)
+        }
+    }, [modalRoom])
+
     // ********************************DEBUG**********************************
     // console.log('Render page', currentTime)
+
     return (
         <RoomContext.Provider value={{
             updYou, setUpdYou, you, setYou, modalRoom, setModalRoom

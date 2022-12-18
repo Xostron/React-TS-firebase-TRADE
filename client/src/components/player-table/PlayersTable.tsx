@@ -86,7 +86,7 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
         changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => changeHandler(e)
     })
 
-    // console.log('Render Table =', players)
+    console.log('Render Table (Detail Page)',)
 
     return (
         <>

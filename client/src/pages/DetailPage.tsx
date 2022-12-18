@@ -63,7 +63,6 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props }) => {
                 row4, row5_1, row5_2, row5_3, online, createAT
             })
         })
-
         // добавляем пустые места, до 5 участников + разделяем на 2 состояния:
         // участник и другие игроки, либо если заходим в комнату как гость - только участники
         let arrPlayers: IPlayer[] = []
@@ -88,7 +87,6 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props }) => {
             else { arrPlayers.push(emptyPlayers) }
         }
         setPlayers(arrPlayers)
-        console.log('useEffect _players')
     }, [_players, modalRoom])
 
 
@@ -110,11 +108,8 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props }) => {
         isGuest: isGuest
     }
 
-    // *******************************EFFECT PROPS********************************
-
-    useEffect(() => {
-        console.log('Render Detail = ', players)
-    }, [players])
+    // *******************************DEBUG********************************
+    console.log('Render Detail')
 
     return (
         <div>

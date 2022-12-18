@@ -18,7 +18,9 @@ const RowMyModal: FC<IMyModal> = ({ children, visible, setVisible, index }) => {
     if (visible) {
         rootClasses2.push(style.active)
     }
+
     console.log('Render modal = ', index, visible)
+
     return (
         <div className={rootClasses.join(" ")} onClick={() => setVisible(false)}>
             <div className={rootClasses2.join(" ")} onClick={(e) => e.stopPropagation()}>
@@ -29,5 +31,5 @@ const RowMyModal: FC<IMyModal> = ({ children, visible, setVisible, index }) => {
 }
 
 export const MyModal = memo(RowMyModal,
-    (prevProps, nextProps) => prevProps.visible === nextProps.visible
+    (prevProps, nextProps) => prevProps === nextProps
 )

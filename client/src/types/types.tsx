@@ -54,7 +54,7 @@ export interface IInputText {
     placeholder?: string,
     autoFocus?: boolean,
     changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    value?: string
+    value: string
 }
 
 export interface IInputDate {
@@ -70,15 +70,15 @@ export interface IInputDate {
 
 export interface IAreatext {
     name: string,
-    placeholder: string,
+    placeholder?: string,
     changeHandler: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
     value: string,
-    autofocus: boolean,
+    autofocus?: boolean,
 }
 export interface IInputNumber {
     name: string,
     placeholder?: string,
-    value?: number,
+    value: number,
     changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 export interface IInputHMS {
@@ -97,7 +97,7 @@ export interface IDetailPage {
 export interface ICardFormCreate {
     itemRoom: IRoom,
     saveRoomHandler: () => void,
-    setModalCreate: (state: boolean) => void,
+    setModalForm: (state: boolean) => void,
     propsAreaTitle: IAreatext,
     propsDateBegin: IInputDate,
     propsDateFinish: IInputDate,

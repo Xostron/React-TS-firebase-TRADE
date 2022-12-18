@@ -6,31 +6,23 @@ import { MyTextarea } from "../UI/input/areatext/MyTextarea"
 import { InputDate } from '../UI/input/input-date/InputDate'
 import { InputTimeHMS } from "../UI/input/input-time/InputTimeHMS"
 import style from './CardFormCreate.module.less'
-import { IAreatext, IInputDate, IInputHMS, IRoom } from "../../types/types"
+import { ICardFormCreate } from "../../types/types"
 
 
 
 
-interface ICardFormCreate {
-    itemRoom: IRoom,
-    saveRoomHandler: () => void,
-    setModalCreate: (state: boolean) => void,
-    propsAreaTitle: IAreatext,
-    propsDateBegin: IInputDate,
-    propsDateFinish: IInputDate,
-    propsDuration: IInputHMS
-}
+
 
 interface IPropsCardFormCreate {
     props: ICardFormCreate;
 }
 
 export const CardFormCreate: FC<IPropsCardFormCreate> = ({ props }) => {
-    const [disable, setDisable] = useState(true)
+    const [disable, setDisable] = useState<boolean>(true)
     const {
         itemRoom,
         saveRoomHandler,
-        setModalCreate,
+        setModalForm,
         propsAreaTitle,
         propsDateBegin,
         propsDateFinish,
@@ -50,7 +42,7 @@ export const CardFormCreate: FC<IPropsCardFormCreate> = ({ props }) => {
     useEffect(() => {
         disableBtn()
     }, [itemRoom])
-
+    console.log("FORM itemRoom= ", itemRoom)
     return (
         <div className={style.container}>
             <MyTextarea props={propsAreaTitle} />
@@ -60,7 +52,7 @@ export const CardFormCreate: FC<IPropsCardFormCreate> = ({ props }) => {
             <BtnText
                 onClick={() => {
                     saveRoomHandler()
-                    setModalCreate(false)
+                    // setModalForm(false)
                 }}
                 disabled={disable}
             >

@@ -22,6 +22,23 @@ export const getRooms = async (db: Firestore, collectionName: string, set: (data
 }
 
 // *****************************create room*****************************
-
+// создание комнаты
+export const saveRoom = async (db: Firestore, collectionName: string, itemRoom: IRoom) => {
+    // setRooms([...rooms, itemRoom])
+    console.log(itemRoom)
+    try {
+        const docRef = await addDoc(collection(db, "rooms"), {
+            title: itemRoom.title,
+            dateBegin: itemRoom.dateBegin,
+            dateFinish: itemRoom.dateFinish,
+            durationRound: itemRoom.durationRound,
+            createAT: serverTimestamp()
+        });
+        console.log("Document written with ID: ", docRef.id);
+        // getRooms()
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
 // *****************************update room*****************************
 

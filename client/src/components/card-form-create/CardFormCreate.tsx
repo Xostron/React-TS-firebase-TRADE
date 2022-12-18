@@ -29,6 +29,7 @@ export const CardFormCreate: FC<IPropsCardFormCreate> = ({ props }) => {
         propsDuration
     } = props
 
+    // validation
     const disableBtn = () => {
         if (itemRoom.title != '' && itemRoom.dateBegin != '' &&
             itemRoom.dateFinish != '' && itemRoom.durationRound != '') {
@@ -42,7 +43,8 @@ export const CardFormCreate: FC<IPropsCardFormCreate> = ({ props }) => {
     useEffect(() => {
         disableBtn()
     }, [itemRoom])
-    console.log("FORM itemRoom= ", itemRoom)
+
+    // console.log("FORM itemRoom= ", itemRoom)
     return (
         <div className={style.container}>
             <MyTextarea props={propsAreaTitle} />
@@ -52,7 +54,6 @@ export const CardFormCreate: FC<IPropsCardFormCreate> = ({ props }) => {
             <BtnText
                 onClick={() => {
                     saveRoomHandler()
-                    // setModalForm(false)
                 }}
                 disabled={disable}
             >

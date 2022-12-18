@@ -1,6 +1,6 @@
 import React, { FC, useContext, useState, useEffect, useLayoutEffect, useCallback, useMemo, memo } from "react";
 import { Loader } from "../components/UI/loader/Loader";
-import { IDetailPage, IPlayer, IPlayersTable } from "../types/types";
+import { IDetailPage, IPlayer, IPlayersTable, ITimerDetailPage } from "../types/types";
 import style from './DetailTradePage.module.less'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { collection, where, query } from "firebase/firestore";
@@ -12,6 +12,7 @@ import { firebaseContext, RoomContext } from "../context/MyContext";
 
 interface IDetailPageProps {
     props: IDetailPage;
+    timer: ITimerDetailPage;
 }
 
 const emptyPlayers: IPlayer = {
@@ -30,7 +31,7 @@ const emptyPlayers: IPlayer = {
     mySync: false
 }
 
-const RowDetailPage: FC<IDetailPageProps> = ({ props }) => {
+const RowDetailPage: FC<IDetailPageProps> = ({ props, timer }) => {
 
     const {
         room,
@@ -109,7 +110,7 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props }) => {
     }
 
     // *******************************DEBUG********************************
-    console.log('Render Detail')
+    // console.log('Render Detail')
 
     return (
         <div>
@@ -120,15 +121,15 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props }) => {
                         <span>Начало торгов {begin}</span>
                         <span>Окончание торгов {finish}</span>
                         <span>Длительность хода {room.durationRound}</span>
-                        {/* <span>Пройдено ходов {timer.countRound}</span> */}
-                        {/* {timer.message !== '' ? <span>{timer.message}</span> : null} */}
+                        {timer.countRound && <span>Пройдено ходов {timer.countRound}</span>}
+                        {timer.message !== '' ? <span>{timer.message}</span> : null}
                     </div>
                     <div className={style.hms}>
                         <span>Ход торгов: </span>
                         <span>
-                            {/* {timer.hh > 9 ? timer.hh : '0' + timer.hh}: */}
-                            {/* {timer.mm > 9 ? timer.mm : '0' + timer.mm}: */}
-                            {/* {timer.ss > 9 ? timer.ss : '0' + timer.ss} */}
+                            {timer.hh > 9 ? timer.hh : '0' + timer.hh}:
+                            {timer.mm > 9 ? timer.mm : '0' + timer.mm}:
+                            {timer.ss > 9 ? timer.ss : '0' + timer.ss}
                         </span>
                     </div>
 
@@ -148,7 +149,7 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props }) => {
     )
 }
 export const DetailPage = memo(RowDetailPage,
-    (prevProps, nextProps) => prevProps.props === nextProps.props
+    (prevProps, nextProps) => prevProps === nextProps
 )
 
 

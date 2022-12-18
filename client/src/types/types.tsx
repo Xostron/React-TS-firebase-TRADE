@@ -103,3 +103,11 @@ export interface ICardFormCreate {
     propsDateFinish: IInputDate,
     propsDuration: IInputHMS
 }
+
+export interface ITimerDetailPage {
+    hh: number,
+    mm: number,
+    ss: number,
+    countRound: number,
+    message: string
+}

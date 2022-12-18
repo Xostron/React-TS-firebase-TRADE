@@ -14,7 +14,7 @@ interface IBtnIcon {
 const RowBtnIcon: FC<IBtnIcon> = ({ tooltip, icon = '', handler,
     width = 24, height = 24, children }) => {
 
-    console.log('Render BtnIcon')
+    // console.log('Render BtnIcon')
 
     return (
         <div className={style.container} onClick={handler}>
@@ -27,9 +27,9 @@ const RowBtnIcon: FC<IBtnIcon> = ({ tooltip, icon = '', handler,
 
 // children , handler - убираем из условия рендеринга (предикат), 
 // т.к они являются сложными данными 
-// и при каждом их определении для React они изменяются 
+// и при каждом их определении для React они изменяются и запускают перерендер
 // (становятся новыми - новый адрес в ОЗУ)
-// поэтому оставляем простые пропсы
+// поэтому оставляем простые пропсы.
 // чтобы сравнивать сложные данные их необходимо кэшировать при помощи 
 // useCallback (функции - ссылка в памяти)
 // и(или) useMemo (кэширует результаты, данные)
@@ -39,9 +39,10 @@ const RowBtnIcon: FC<IBtnIcon> = ({ tooltip, icon = '', handler,
 export const BtnIcon = memo<IBtnIcon>(RowBtnIcon,
     (prevProps, nextProps) =>
         // prevProps.children === nextProps.children &&
-        // prevProps.handler === nextProps.handler &&
-        prevProps.height === nextProps.height &&
-        prevProps.width === nextProps.width &&
-        prevProps.icon === nextProps.icon &&
-        prevProps.tooltip === nextProps.tooltip
+        // prevProps.handler === nextProps.handler ||
+        // prevProps.height === nextProps.height ||
+        // prevProps.width === nextProps.width ||
+        // prevProps.icon === nextProps.icon ||
+        // prevProps.tooltip === nextProps.tooltip
+        prevProps === nextProps
 ) 

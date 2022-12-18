@@ -14,7 +14,7 @@ interface ITitle {
 
 const RowTitle: FC<ITitle> = ({ title, children, icon, handler, text }) => {
 
-    console.log('Render Title')
+    // console.log('Render Title')
 
     return (
         <div className={style.title}>
@@ -44,11 +44,12 @@ const RowTitle: FC<ITitle> = ({ title, children, icon, handler, text }) => {
 export const Title = memo<ITitle>(RowTitle,
     // предикат - функция, возвращающая true||false (false - отрендерить, true - нет)
     (prevProps, nextProps) =>
-        // prevProps.children === nextProps.children &&
-        // prevProps.handler === nextProps.handler &&
-        prevProps.icon === nextProps.icon &&
-        prevProps.text === nextProps.text &&
-        prevProps.title === nextProps.title
+        // prevProps.children === nextProps.children ||
+        // // prevProps.handler === nextProps.handler &&
+        // prevProps.icon === nextProps.icon ||
+        // prevProps.text === nextProps.text ||
+        // prevProps.title === nextProps.title
+        prevProps === nextProps
 )
 
 // children , handler - убираем из условия рендеринга (предикат),

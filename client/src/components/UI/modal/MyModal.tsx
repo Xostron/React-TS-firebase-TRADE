@@ -19,7 +19,7 @@ const RowMyModal: FC<IMyModal> = ({ children, visible, setVisible, index }) => {
         rootClasses2.push(style.active)
     }
 
-    console.log('Render modal = ', index, visible)
+    // console.log('Render modal = ', index, visible)
 
     return (
         <div className={rootClasses.join(" ")} onClick={() => setVisible(false)}>

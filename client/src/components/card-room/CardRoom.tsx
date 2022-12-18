@@ -20,7 +20,7 @@ const RowCardRoom: FC<IRoomCard> = ({ props }) => {
     let begin = new Date(room.dateBegin).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
     let finish = new Date(room.dateFinish).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
 
-    console.log('Render CardRoom =', idx + 1)
+    // console.log('Render CardRoom =', idx + 1)
 
     return (
         <div className={style.container}>
@@ -43,6 +43,7 @@ const RowCardRoom: FC<IRoomCard> = ({ props }) => {
 
 export const CardRoom = memo(RowCardRoom,
     (prevProps, nextProps) =>
-        prevProps.props.idx === nextProps.props.idx &&
-        prevProps.props.room === nextProps.props.room
+        // prevProps.props.idx === nextProps.props.idx &&
+        // prevProps.props.room === nextProps.props.room
+        prevProps.props === nextProps.props
 )

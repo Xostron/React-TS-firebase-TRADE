@@ -50,7 +50,7 @@ function RowListSquare({ items, renderItem, }: IListSquare) {
 
     const newItems = get2Arr(arrComponents, size)
 
-    console.log('Render ListSquare', size)
+    // console.log('Render ListSquare', size)
 
     return (
         <div className={style.wrapper} ref={refWidth}>
@@ -70,5 +70,6 @@ function RowListSquare({ items, renderItem, }: IListSquare) {
 export const ListSquare = memo(RowListSquare,
     (prevProps, nextProps) =>
         // prevProps.items.forEach((val,idx)=>val===nextProps.items[idx])
-        prevProps.items.length === nextProps.items.length
+        // prevProps.items.length === nextProps.items.length
+        prevProps.renderItem === nextProps.renderItem
 )

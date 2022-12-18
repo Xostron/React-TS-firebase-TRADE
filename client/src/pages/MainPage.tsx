@@ -9,7 +9,7 @@ import { BtnIcon } from "../components/UI/button/btn-icon/BtnIcon";
 import iAdd from '../source/icons/bx-customize.svg'
 import { CardRoom } from "../components/card-room/CardRoom"
 import { ListSquare } from "../components/UI/list/list-square/ListSquare";
-import { ICardFormCreate, IDetailPage, IPlayer, IRoom, IRoomComponent } from "../types/types";
+import { ICardFormCreate, IDetailPage, IPlayer, IRoom, IRoomComponent, ITimerDetailPage } from "../types/types";
 import { MyModal } from "../components/UI/modal/MyModal";
 import { DetailPage } from "./DetailPage";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -17,6 +17,8 @@ import { getRooms, saveRoom } from "../api/api-firebase-room";
 import { firebaseContext, RoomContext } from "../context/MyContext";
 import { getPlayers, isMyRoom, savePlayer } from "../api/api-firebase-players";
 import { CardFormCreate } from "../components/card-form-create/CardFormCreate";
+import { User } from "firebase/auth";
+import { useSchedular } from "../hooks/useSchedular";
 
 
 
@@ -41,15 +43,15 @@ const defaultRoom: IRoom = {
     title: '',
     dateBegin: '',
     dateFinish: '',
-    durationRound: '00:02:12',
+    durationRound: '00:02:00',
     createAT: ''
 }
 export const MainPage: FC = () => {
 
-    // ********************************Firebase********************************
+    // ********************************Hooks********************************
     const { auth, db } = useContext(firebaseContext)
     const [user] = useAuthState(auth)
-
+    const { currentTime } = useSchedular(() => callbackSchedular(), 1000)
     // ********************************Database********************************
     const [rooms, setRooms] = useState<IRoom[]>([])
     useEffect(() => { getRooms(db, 'rooms', setRooms) }, [])
@@ -61,6 +63,7 @@ export const MainPage: FC = () => {
     const [you, setYou] = useState<IPlayer>({} as IPlayer)
     const [propsDetailPage, setPropsDetailPage] = useState<IDetailPage>({} as IDetailPage)
     const [itemRoom, setItemRoom] = useState<IRoom>(defaultRoom)
+    const [remainingTime, setRemainingTime] = useState<ITimerDetailPage>({} as ITimerDetailPage)
     // ***************************List square props****************************
     // callback формирования данных в roomComponents для ListSquare
     const cbPropsRooms = (room: IRoom, idx: number) => ({
@@ -69,7 +72,62 @@ export const MainPage: FC = () => {
         handlerEnterAsWatch,
         handlerEnterAsPlayer
     })
-
+    function callbackSchedular() {
+        // console.log('TradesPage schedular', remainingTime)
+        // setRemainingTime(new Date(currentTime).toISOString())
+        if (modalRoom && propsDetailPage.room?.id) {
+            // console.log('SHEDULAR = ', Date.parse(currentTime), propsDetailRoom.room)
+            let begin = Date.parse(propsDetailPage.room.dateBegin)
+            let finish = Date.parse(propsDetailPage.room.dateFinish)
+            let current = Date.parse(currentTime)
+            let totalTime = finish - begin
+            // console.log('begin', begin)
+            // console.log('finish', finish)
+            // console.log('current', current)
+            if (current < finish && current > begin) {
+                // торги открыты
+                let elapsedTime = current - begin
+                // извлекаем длительность раунда 
+                let roundBig = Date.parse('2022-12-10T' + propsDetailPage.room.durationRound)
+                let roundZero = Date.parse('2022-12-10T00:00:00')
+                let round = roundBig - roundZero
+                // console.log('SHEDULAR ROUND= ', roundBig, roundZero, round)
+                // кол-во прошедших райндов
+                // let countRound = Math.trunc(elapsedTime / round) //parseInt
+                let countRound = parseInt((elapsedTime / round).toString())
+                let moduloRound = elapsedTime % round
+                let remaining = round - moduloRound
+                // console.log('ROUND = ', countRound)
+                // результат время хода раунда
+                let hh = parseInt((remaining / 3600000).toString()) //parseInt
+                let mm = parseInt(((remaining - hh * 3600000) / 60000).toString()) //parseInt
+                let ss = (remaining - hh * 3600000 - mm * 60000) / 1000
+                // console.log('SHEDULAR ROUND= ', countRound, remaining, `${hh}:${mm}:${ss}`)
+                setRemainingTime({ hh, mm, ss, countRound, message: '' })
+            }
+            else if (current > finish) {
+                // торги закрыты
+                setRemainingTime({
+                    hh: 0,
+                    mm: 0,
+                    ss: 0,
+                    countRound: 0,
+                    message: 'Торги закончились'
+                })
+            }
+            else if (current < begin) {
+                // торги еще не начались
+                setRemainingTime({
+                    hh: 0,
+                    mm: 0,
+                    ss: 0,
+                    countRound: 0,
+                    message: 'Торги еще не начались'
+                })
+            }
+        }
+        else { }
+    }
     // handler props
     const handlerEnterAsWatch = (idx: number) => {
         setPropsDetailPage(cbPropsDetailRoom(idx, true))
@@ -107,6 +165,9 @@ export const MainPage: FC = () => {
         getRooms(db, 'rooms', setRooms)
         setModalForm(false)
     }
+    const handlerCallModalForm = useCallback(() => {
+        user ? setModalForm(modalForm => !modalForm) : alert('Авторизуйтесь через аккаунт google:)')
+    }, [user])
 
     // ***************************DetailPage props****************************
     // callback формирование props для просмотра комнаты в DetailTradePage 
@@ -157,7 +218,7 @@ export const MainPage: FC = () => {
     }
 
     // ********************************DEBUG**********************************
-    console.log('Render page')
+    // console.log('Render page', currentTime)
     return (
         <RoomContext.Provider value={{
             updYou, setUpdYou, you, setYou, modalRoom, setModalRoom
@@ -166,7 +227,7 @@ export const MainPage: FC = () => {
                 <Title title={'Текущие торги'} >
                     <BtnIcon
                         icon={iAdd}
-                        handler={() => { setModalForm(modalForm => !modalForm) }}
+                        handler={handlerCallModalForm}
                         tooltip='Добавить карточку'
                     />
                 </Title>
@@ -189,7 +250,7 @@ export const MainPage: FC = () => {
 
                 <MyModal visible={modalRoom} setVisible={setModalRoom} index={2}>
                     {modalRoom ?
-                        <DetailPage props={propsDetailPage} /> : null}
+                        <DetailPage props={propsDetailPage} timer={remainingTime} /> : null}
                 </MyModal>
 
             </>

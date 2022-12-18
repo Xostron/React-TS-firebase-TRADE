@@ -8,7 +8,7 @@ export const useSchedular = (callback: () => void, delay?: number) => {
 
     const updCallback = useRef<() => void>(callback)
 
-    const [currentTime, setCurrentTime] = useState<Date>(new Date())
+    const [currentTime, setCurrentTime] = useState<string>(new Date().toString())
 
     // подписка на callback
     useEffect(() => {
@@ -20,6 +20,7 @@ export const useSchedular = (callback: () => void, delay?: number) => {
     useEffect(() => {
         function tick() {
             updCallback.current();
+            setCurrentTime(new Date().toString())
         }
         if (delay !== null) {
             let id = setInterval(tick, delay);

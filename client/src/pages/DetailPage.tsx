@@ -40,18 +40,38 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props, timer }) => {
     } = props
 
     let idRoom = room ? room.id : '0'
-    // ********************************Context********************************
+    // *********************************hooks*********************************
     const { db } = useContext(firebaseContext)
     const { updYou, setUpdYou, you, setYou, modalRoom, setModalRoom } = useContext(RoomContext)
-    // *********************************State**********************************
-    const [players, setPlayers] = useState<IPlayer[]>([])
-
     // автоматически обновляет данные players
     const [_players, loading] = useCollectionData(
         query(collection(db, 'players'),
             where('idRoom', '==', idRoom))
     )
 
+    // ********************************State**********************************
+    const [players, setPlayers] = useState<IPlayer[]>([])
+
+    // ********************************HANDLER********************************
+    const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setYou({ ...you, [e.target.name]: e.target.value })
+    }
+
+    // ******************************Rendering********************************
+    let begin = room && new Date(room.dateBegin).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
+    let finish = room && new Date(room.dateFinish).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
+
+    // ****************************Player Table Props*****************************
+    let propsPlayerTable = {
+        players: players,
+        you: you,
+        changeHandler: changeHandler,
+        uid: uid,
+        idRoom: idRoom,
+        isGuest: isGuest
+    }
+
+    // ********************************EFFECT*********************************
     // приведение к типу IPlayer[] так как данные от firebase имею свой тип DocumentData
     useEffect(() => {
         let data: IPlayer[] = []
@@ -89,25 +109,6 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props, timer }) => {
         }
         setPlayers(arrPlayers)
     }, [_players, modalRoom])
-
-
-    // *******************************HANDLER*******************************
-    const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setYou({ ...you, [e.target.name]: e.target.value })
-    }
-
-    // *******************************Rendering********************************
-    let begin = room && new Date(room.dateBegin).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
-    let finish = room && new Date(room.dateFinish).toLocaleString('ru', { dateStyle: 'medium', timeStyle: 'short' })
-
-    let propsPlayerTable = {
-        players: players,
-        you: you,
-        changeHandler: changeHandler,
-        uid: uid,
-        idRoom: idRoom,
-        isGuest: isGuest
-    }
 
     // *******************************DEBUG********************************
     // console.log('Render Detail')

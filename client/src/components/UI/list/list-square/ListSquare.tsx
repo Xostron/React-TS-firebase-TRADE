@@ -48,6 +48,7 @@ function RowListSquare({ items, renderItem, }: IListSquare) {
         return result;
     }
 
+    // данные для jsx
     const newItems = get2Arr(arrComponents, size)
 
     // console.log('Render ListSquare', size)

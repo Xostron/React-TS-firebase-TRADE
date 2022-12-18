@@ -27,11 +27,10 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
         isGuest
     } = props
 
-    // ******************************Firebase******************************
+    // ******************************Hooks******************************
     const { db } = useContext(firebaseContext)
 
-    // ***************************Rendering***************************
-
+    // ****************************Rendering****************************
     let partOneplayers = []
     !isGuest && partOneplayers.push({
         name: `Участник 1+`,
@@ -46,8 +45,7 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
         }))
     let templatePlayers = [...partOneplayers, ...partOtherPlayers]
 
-
-
+    // ******************************Props******************************
     const propsRow1 = () => ({
         name: 'row1',
         placeholder: '...',
@@ -86,6 +84,7 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
         changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => changeHandler(e)
     })
 
+    // ******************************Debug******************************
     // console.log('Render Table (Detail Page)',)
 
     return (

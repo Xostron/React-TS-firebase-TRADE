@@ -1,8 +1,5 @@
+import React, { useState, useEffect, useRef } from "react";
 
-import React, { FC, useState, useEffect, useRef } from "react";
-
-
-// при изменении delay
 
 export const useSchedular = (callback: () => void, delay?: number) => {
 
@@ -15,7 +12,7 @@ export const useSchedular = (callback: () => void, delay?: number) => {
         updCallback.current = callback
     }, [callback])
 
-    // подписка на delay и монтирование-запускается таймер, 
+    // подписка на delay и монтирование - запуск таймера, 
     // размонтирование - удаляется таймер
     useEffect(() => {
         function tick() {

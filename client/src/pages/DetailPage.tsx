@@ -122,17 +122,21 @@ const RowDetailPage: FC<IDetailPageProps> = ({ props, timer }) => {
                         <span>Начало торгов {begin}</span>
                         <span>Окончание торгов {finish}</span>
                         <span>Длительность хода {room.durationRound}</span>
-                        {timer.countRound && <span>Пройдено ходов {timer.countRound}</span>}
-                        {timer.message !== '' ? <span>{timer.message}</span> : null}
+                        {timer.message !== '' ?
+                            <span>Пройдено ходов {timer.countRound} ({timer.message})</span> :
+                            <span>Пройдено ходов {timer.countRound}</span>}
+
+                        <div className={style.hms}>
+                            <span>Ход торгов: </span>
+                            <span>
+                                {timer.hh > 9 ? timer.hh : '0' + timer.hh}:
+                                {timer.mm > 9 ? timer.mm : '0' + timer.mm}:
+                                {timer.ss > 9 ? timer.ss : '0' + timer.ss}
+                            </span>
+                        </div>
+
                     </div>
-                    <div className={style.hms}>
-                        <span>Ход торгов: </span>
-                        <span>
-                            {timer.hh > 9 ? timer.hh : '0' + timer.hh}:
-                            {timer.mm > 9 ? timer.mm : '0' + timer.mm}:
-                            {timer.ss > 9 ? timer.ss : '0' + timer.ss}
-                        </span>
-                    </div>
+
 
                     <div className={style.players}>
                         {you && players &&

@@ -31,5 +31,7 @@ const RowMyModal: FC<IMyModal> = ({ children, visible, setVisible, index }) => {
 }
 
 export const MyModal = memo(RowMyModal,
-    (prevProps, nextProps) => prevProps === nextProps
+    (prevProps, nextProps) =>
+        prevProps.children === nextProps.children &&
+        prevProps.visible === nextProps.visible
 )

@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect } from "react";
+import React, { FC, memo, useCallback, useEffect } from "react";
 import style from './BtnIcon.module.less'
 import { HandySvg } from 'handy-svg'
 
@@ -14,7 +14,7 @@ interface IBtnIcon {
 const RowBtnIcon: FC<IBtnIcon> = ({ tooltip, icon = '', handler,
     width = 24, height = 24, children }) => {
 
-    // console.log('Render BtnIcon')
+    console.log('Render BtnIcon')
 
     return (
         <div className={style.container} onClick={handler}>
@@ -25,24 +25,26 @@ const RowBtnIcon: FC<IBtnIcon> = ({ tooltip, icon = '', handler,
     )
 }
 
-// children , handler - убираем из условия рендеринга (предикат), 
-// т.к они являются сложными данными 
-// и при каждом их определении для React они изменяются и запускают перерендер
-// (становятся новыми - новый адрес в ОЗУ)
-// поэтому оставляем простые пропсы.
-// чтобы сравнивать сложные данные их необходимо кэшировать при помощи 
-// useCallback (функции - ссылка в памяти)
-// и(или) useMemo (кэширует результаты, данные)
 
+// Про глубокую проверка:
+// memo выполняет поверхностную проверку props, т.е. он видит отличия в простых данных (числа, строки, boolean)
+// сложные данные (функции, массивы, объекты) - при сравнении в memo всегда false (потому что при рендеринге, ссылка на эти объекты новая)
+// для того чтобы сравнивать сложные данные используют useMemo (для хеширования объектов, результатов функций) и useCallback (хэширует ссылку на функцию)
+// prevProps === nextProps - true - rerender не выполняется
+// prevProps === nextProps - false - rerender выполняется
 
+// данный комопнент кнопка имеет простые (height,width,icon,tooltip,children - это строки и числа) и 
+// сложные данные (handler - функция при каждом рендеринге новая, поэтому она захеширована в 
+//     родительском компоненте useCallback с зависимостью от статуса авторизации) - таким образов наша кнопка 
+// стала чистым компонентом и мы можем убрать правила рендеринга prevProps/nextProps
 
 export const BtnIcon = memo<IBtnIcon>(RowBtnIcon,
+    // предикат - функция, возвращающая true||false (false - перерендерить, true - нет)
     (prevProps, nextProps) =>
-        // prevProps.children === nextProps.children &&
-        // prevProps.handler === nextProps.handler ||
-        // prevProps.height === nextProps.height ||
-        // prevProps.width === nextProps.width ||
-        // prevProps.icon === nextProps.icon ||
-        // prevProps.tooltip === nextProps.tooltip
-        prevProps === nextProps
+        prevProps.children === nextProps.children &&
+        prevProps.handler === nextProps.handler &&
+        prevProps.height === nextProps.height &&
+        prevProps.width === nextProps.width &&
+        prevProps.icon === nextProps.icon &&
+        prevProps.tooltip === nextProps.tooltip
 ) 

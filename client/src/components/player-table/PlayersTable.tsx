@@ -96,13 +96,12 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
                         <thead>
                             <tr>
                                 {/* столбцы */}
-                                <th align="center">Параметры и требования </th>
-                                {templatePlayers.length && templatePlayers.map((val, idx) => {
+                                <th align="center">Параметры и требования</th>
+                                {templatePlayers.map((val, idx) => {
                                     return (<th key={idx} align="center">
                                         <div className={style.column}>
                                             <span>{val.name}</span>
                                             <span>{val.email}</span>
-                                            {/* <span style={{ fontWeight: '400' }}>{val.online}</span> */}
                                         </div>
                                     </th>)
                                 })}
@@ -119,13 +118,8 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
                                     <td align='center'>
                                         <InputText props={propsRow1()} />
                                     </td>}
-
                                 {players.map((val, idx) => {
-                                    return (
-                                        <td align='center' key={idx}>
-                                            {val.row1}
-                                        </td>
-                                    )
+                                    return (<td align='center' key={idx}>{val.row1}</td>)
                                 })}
                             </tr>
                             {/* строка 2 */}
@@ -135,22 +129,17 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
                                     <td align='center' >
                                         <InputNumber props={propsRow2()} />
                                     </td>}
-
                                 {players.map((val, idx) => {
-                                    return (
-                                        <td align='center' key={idx}>
-                                            {val.row2}
-                                        </td>
-                                    )
+                                    return (<td align='center' key={idx}>{val.row2}</td>)
                                 })}
                             </tr>
                             {/* строка 3 */}
                             <tr>
                                 <td>Гарантийные обязательства, мес</td>
-                                {!isGuest ?
+                                {!isGuest &&
                                     <td align='center' >
                                         <InputNumber props={propsRow3()} />
-                                    </td> : null}
+                                    </td>}
 
                                 {players.map((val, idx) => {
                                     return (
@@ -163,10 +152,10 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
                             {/* строка 4 */}
                             <tr>
                                 <td>Условия оплаты</td>
-                                {!isGuest ?
+                                {!isGuest &&
                                     <td align='center' >
                                         <InputNumber props={propsRow4()} />
-                                    </td> : null}
+                                    </td>}
 
                                 {players.map((val, idx) => {
                                     return (
@@ -179,14 +168,14 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
                             {/* строка 5 */}
                             <tr>
                                 <td>Стоимость изготовления лота, руб (без НДС)</td>
-                                {!isGuest ?
+                                {!isGuest &&
                                     <td align='center' >
 
                                         <InputNumber props={propsRow5_1()} />
                                         <InputNumber props={propsRow5_2()} />
                                         <InputNumber props={propsRow5_3()} />
 
-                                    </td> : null
+                                    </td>
                                 }
                                 {players.map((val, idx) => {
                                     return (
@@ -203,7 +192,7 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
                             {/* строка 6 */}
                             <tr>
                                 <td>Действия</td>
-                                {!isGuest ?
+                                {!isGuest &&
                                     <td align='center'>
                                         <BtnText
                                             onClick={() => {
@@ -212,7 +201,7 @@ const RowPlayersTable: FC<IPlayersTableProps> = ({ props }) => {
                                             }}>
                                             Подтвердить
                                         </BtnText>
-                                    </td> : null}
+                                    </td>}
 
                                 {players.map((val, idx) => {
                                     return (<td align='center' key={idx}>

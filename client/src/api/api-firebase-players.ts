@@ -46,7 +46,7 @@ export const updPlayer = async (db: Firestore, collectionName: string, uid: stri
 // запрос являюсь ли участником комнаты
 export const isMyRoom = async (db: Firestore, collectionName: string, idRoom: string, uid: string) => {
     try {
-        console.log('isMyRoom API = ', collectionName, idRoom, uid)
+        // console.log('isMyRoom API = ', collectionName, idRoom, uid)
         let q = query(collection(db, collectionName),
             where("idRoom", "==", idRoom),
             where("uid", "==", uid))
@@ -56,7 +56,7 @@ export const isMyRoom = async (db: Firestore, collectionName: string, idRoom: st
             const { idRoom, uid, userName, row1, row2, row3, row4, row5_1, row5_2, row5_3, online, createAT } = doc.data()
             data.push({ idRoom, uid, userName, row1, row2, row3, row4, row5_1, row5_2, row5_3, online, createAT })
         })
-        console.log('data = ', data)
+        // console.log('data = ', data)
         if (data.length) return true
         return false
     } catch (error) {

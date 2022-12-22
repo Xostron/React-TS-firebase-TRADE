@@ -1,4 +1,4 @@
-import React, { FC, useEffect, memo } from 'react'
+import React, { FC, useEffect, memo, useMemo } from 'react'
 import { HandySvg } from 'handy-svg'
 import style from './Title.module.less'
 
@@ -14,7 +14,8 @@ interface ITitle {
 
 const RowTitle: FC<ITitle> = ({ title, children, icon, handler, text }) => {
 
-    // console.log('Render Title')
+    console.log('Render Title')
+
 
     return (
         <div className={style.title}>
@@ -39,28 +40,17 @@ const RowTitle: FC<ITitle> = ({ title, children, icon, handler, text }) => {
     )
 }
 
-// Title будет повторно рендериться только при изменении
-//  тех пропсов, которые указаны в предикате
+
 export const Title = memo<ITitle>(RowTitle,
     // предикат - функция, возвращающая true||false (false - отрендерить, true - нет)
     (prevProps, nextProps) =>
-        // prevProps.children === nextProps.children ||
-        // // prevProps.handler === nextProps.handler &&
-        // prevProps.icon === nextProps.icon ||
-        // prevProps.text === nextProps.text ||
-        // prevProps.title === nextProps.title
-        prevProps === nextProps
+        prevProps.children === nextProps.children &&
+        prevProps.handler === nextProps.handler &&
+        prevProps.icon === nextProps.icon &&
+        prevProps.text === nextProps.text &&
+        prevProps.title === nextProps.title
 )
 
-// children , handler - убираем из условия рендеринга (предикат),
-// т.к они являются сложными данными
-// и при каждом их определении для React они изменяются
-// (становятся новыми - новый адрес в ОЗУ)
-// поэтому оставляем простые пропсы
-// чтобы сравнивать сложные данные их необходимо кэшировать при помощи
-// useCallback (функции - ссылка в памяти)
-// и(или) useMemo (кэширует результаты, данные)
-
-//  если children не исключать из правил, то этот компонент
-// необходимо обернуть в memo (является чистым компонентом), чтобы при его
-// объявлении не происходило лишнего рендеринга компонента Title
+// У компонета Title имеется children (кнопка Авторизации она мемоизирована - делает перерендер по предикату)
+// Title всегда рендериться, потому что children каждый раз новый, не смотря на то, что это pureComponent
+// если не проверять children, то rerender прекратиться, но и данные для children замкнуться и он также перестанет обновляться (rerender)

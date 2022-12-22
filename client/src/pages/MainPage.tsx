@@ -46,7 +46,7 @@ export const MainPage: FC = () => {
     // *********************************Hooks**********************************
     const { auth, db } = useContext(firebaseContext)
     const [user] = useAuthState(auth)
-    const { currentTime } = useSchedular(() => callbackSchedular(), 1000)
+    // const { currentTime } = useSchedular(() => callbackSchedular(), 1000)
 
     // **************************Data from firestore***************************
     const [rooms, setRooms] = useState<IRoom[]>([])
@@ -62,62 +62,62 @@ export const MainPage: FC = () => {
     const [remainingTime, setRemainingTime] = useState<ITimerDetailPage>({} as ITimerDetailPage)
 
     // *******************************Schedular********************************
-    function callbackSchedular() {
-        // console.log('TradesPage schedular', remainingTime)
-        // setRemainingTime(new Date(currentTime).toISOString())
-        if (modalRoom && propsDetailPage.room?.id) {
-            // console.log('SHEDULAR = ', Date.parse(currentTime), propsDetailRoom.room)
-            let begin = Date.parse(propsDetailPage.room.dateBegin)
-            let finish = Date.parse(propsDetailPage.room.dateFinish)
-            let current = Date.parse(currentTime)
-            let totalTime = finish - begin
-            // console.log('begin', begin)
-            // console.log('finish', finish)
-            // console.log('current', current)
-            if (current < finish && current > begin) {
-                // торги открыты
-                let elapsedTime = current - begin
-                // извлекаем длительность раунда 
-                let roundBig = Date.parse('2022-12-10T' + propsDetailPage.room.durationRound)
-                let roundZero = Date.parse('2022-12-10T00:00:00')
-                let round = roundBig - roundZero
-                // console.log('SHEDULAR ROUND= ', roundBig, roundZero, round)
-                // кол-во прошедших райндов
-                // let countRound = Math.trunc(elapsedTime / round) //parseInt
-                let countRound = parseInt((elapsedTime / round).toString())
-                let moduloRound = elapsedTime % round
-                let remaining = round - moduloRound
-                // console.log('ROUND = ', countRound)
-                // результат время хода раунда
-                let hh = parseInt((remaining / 3600000).toString()) //parseInt
-                let mm = parseInt(((remaining - hh * 3600000) / 60000).toString()) //parseInt
-                let ss = (remaining - hh * 3600000 - mm * 60000) / 1000
-                // console.log('SHEDULAR ROUND= ', countRound, remaining, `${hh}:${mm}:${ss}`)
-                setRemainingTime({ hh, mm, ss, countRound, message: '' })
-            }
-            else if (current > finish) {
-                // торги закрыты
-                setRemainingTime({
-                    hh: 0,
-                    mm: 0,
-                    ss: 0,
-                    countRound: 0,
-                    message: 'Торги закончились'
-                })
-            }
-            else if (current < begin) {
-                // торги еще не начались
-                setRemainingTime({
-                    hh: 0,
-                    mm: 0,
-                    ss: 0,
-                    countRound: 0,
-                    message: 'Торги еще не начались'
-                })
-            }
-        }
-        else { }
-    }
+    // function callbackSchedular() {
+    //     // console.log('TradesPage schedular', remainingTime)
+    //     // setRemainingTime(new Date(currentTime).toISOString())
+    //     if (modalRoom && propsDetailPage.room?.id) {
+    //         // console.log('SHEDULAR = ', Date.parse(currentTime), propsDetailRoom.room)
+    //         let begin = Date.parse(propsDetailPage.room.dateBegin)
+    //         let finish = Date.parse(propsDetailPage.room.dateFinish)
+    //         let current = Date.parse(currentTime)
+    //         let totalTime = finish - begin
+    //         // console.log('begin', begin)
+    //         // console.log('finish', finish)
+    //         // console.log('current', current)
+    //         if (current < finish && current > begin) {
+    //             // торги открыты
+    //             let elapsedTime = current - begin
+    //             // извлекаем длительность раунда 
+    //             let roundBig = Date.parse('2022-12-10T' + propsDetailPage.room.durationRound)
+    //             let roundZero = Date.parse('2022-12-10T00:00:00')
+    //             let round = roundBig - roundZero
+    //             // console.log('SHEDULAR ROUND= ', roundBig, roundZero, round)
+    //             // кол-во прошедших райндов
+    //             // let countRound = Math.trunc(elapsedTime / round) //parseInt
+    //             let countRound = parseInt((elapsedTime / round).toString())
+    //             let moduloRound = elapsedTime % round
+    //             let remaining = round - moduloRound
+    //             // console.log('ROUND = ', countRound)
+    //             // результат время хода раунда
+    //             let hh = parseInt((remaining / 3600000).toString()) //parseInt
+    //             let mm = parseInt(((remaining - hh * 3600000) / 60000).toString()) //parseInt
+    //             let ss = (remaining - hh * 3600000 - mm * 60000) / 1000
+    //             // console.log('SHEDULAR ROUND= ', countRound, remaining, `${hh}:${mm}:${ss}`)
+    //             setRemainingTime({ hh, mm, ss, countRound, message: '' })
+    //         }
+    //         else if (current > finish) {
+    //             // торги закрыты
+    //             setRemainingTime({
+    //                 hh: 0,
+    //                 mm: 0,
+    //                 ss: 0,
+    //                 countRound: 0,
+    //                 message: 'Торги закончились'
+    //             })
+    //         }
+    //         else if (current < begin) {
+    //             // торги еще не начались
+    //             setRemainingTime({
+    //                 hh: 0,
+    //                 mm: 0,
+    //                 ss: 0,
+    //                 countRound: 0,
+    //                 message: 'Торги еще не начались'
+    //             })
+    //         }
+    //     }
+    //     else { }
+    // }
 
     // ********************************Handlers********************************
     const handlerEnterAsWatch = (idx: number) => {
@@ -156,9 +156,9 @@ export const MainPage: FC = () => {
         getRooms(db, 'rooms', setRooms)
         setModalForm(false)
     }
-    const handlerCallModalForm = () => {
+    const handlerCallModalForm = useCallback(() => {
         user ? setModalForm(modalForm => !modalForm) : alert('Авторизуйтесь через аккаунт google:)')
-    }
+    }, [user])
 
     // ***************************Form Create props****************************
     let propsFormCreate: ICardFormCreate = {
@@ -234,7 +234,6 @@ export const MainPage: FC = () => {
 
                 {rooms &&
                     <ListSquare
-                        // rooms && rooms.map(cbPropsRoom)
                         items={rooms.map(cbPropsRooms)}
                         renderItem={(room, idx) => {
                             return (
